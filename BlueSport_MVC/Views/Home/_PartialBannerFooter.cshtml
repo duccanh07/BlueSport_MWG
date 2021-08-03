@@ -1,0 +1,12 @@
+﻿@model List<BlueSport_MVC.Models.BannerModel>
+<!-- Banner footer -->
+<div class="trademark__post owl-carousel">
+    @foreach (var item in Model)
+    {
+        <a href="#" class="post-item">
+            <img src="@item.pathImg" alt="@item.altImg">
+            <p>@item.description</p>
+        </a>
+    }
+</div>
+
