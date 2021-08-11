@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BlueSport_MVC.Service.Client;
 
 namespace BlueSport_MVC
 {
@@ -29,6 +30,7 @@ namespace BlueSport_MVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IClientService, ClientService>();
             services.AddTransient<IBannerService, BannerService>();
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IStoreService, StoreService>();
@@ -57,7 +59,7 @@ namespace BlueSport_MVC
             app.UseRouting();
 
             app.UseAuthorization();
-
+  
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

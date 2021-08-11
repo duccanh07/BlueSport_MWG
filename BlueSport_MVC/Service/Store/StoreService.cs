@@ -1,5 +1,6 @@
 ﻿using BlueSport_MVC.Models;
 using BlueSport_MVC.ModelsDTO;
+using BlueSport_MVC.Service.Client;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,12 @@ namespace BlueSport_MVC.Service.Store
 {
     public class StoreService : IStoreService
     {
+        public string path;
+        private readonly IClientService _clientService;
+        public StoreService(IClientService clientService)
+        {
+            _clientService = clientService;
+        }
         public List<StoreModel> GetStores()
         {
             // to do call api 
@@ -18,11 +25,8 @@ namespace BlueSport_MVC.Service.Store
 
 
             #region Get Data DTO => API
-            var client = new RestClient("https://virtserver.swaggerhub.com/duccanh07/BlueSport-MWG/1.0.0/store");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.GET);
-            IRestResponse response = client.Execute(request);
-            Console.WriteLine(response.Content);
+            path = "store";
+            var response = _clientService.GetAPI(path);
             var dataDto = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ModelsDTO.StoreDTO>>(response.Content);
             #endregion
 

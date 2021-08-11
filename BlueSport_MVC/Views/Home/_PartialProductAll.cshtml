@@ -1,17 +1,17 @@
-﻿@model List<BlueSport_MVC.Models.ProductModel>
+﻿    @model List<BlueSport_MVC.Models.ProductModel>
 
 <div class="listproduct listproduct-promo fInter">
     @foreach (var item in Model)
     {
         <div class="item">
-            <a href="#">
+            <a href="/detail/@item.UrlProduct">
                 <div class="item-wrap">
                     <div class="item-label">
                         <span class="lb-percent">-@item.Percent%</span>
                         <span class="lb-tragop">Góp @item.Installment%</span>
                     </div>
                     <div class="item-img">
-                        <img src="@item.ImageUrl" alt="@item.ImageName">
+                        <img src="./@item.ImageUrl" alt="@item.ImageName">
                     </div>
                 </div>
                 <h3 class="fInter"><span>@item.NameBrand</span>  @item.NameProduct </h3>

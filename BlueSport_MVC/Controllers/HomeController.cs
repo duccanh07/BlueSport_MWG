@@ -39,7 +39,7 @@ namespace BlueSport_MVC.Controllers
 
         public IActionResult Index()
         {
-            var viewModelHome = new ViewModel.ViewModelHome()
+            var viewModelHome = new ViewModel.vmHome()
             {
                 lsBanner = _bannerService.GetBannerHeader(),
                 lsProductAll = _productService.GetProductsAll(),

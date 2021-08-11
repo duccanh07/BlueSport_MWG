@@ -14,5 +14,6 @@ namespace BlueSport_MVC.Service.Product
         public List<ProductModel> GetProductsChildren();
         public List<ProductModel> GetProductsBicycle();
         public List<ProductModel> GetProductsSport();
+        public ProductModel GetUrl(string urlProduct);
     }
 }

@@ -13,6 +13,7 @@ namespace BlueSport_MVC.ModelsDTO
         public string pathImg { get; set; }
         public string altImg { get; set; }
         public string description { get; set; }
+
     }
 
     public static class BannerDTOExt

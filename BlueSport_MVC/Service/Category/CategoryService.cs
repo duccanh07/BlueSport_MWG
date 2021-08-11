@@ -1,5 +1,6 @@
 ﻿using BlueSport_MVC.Models;
 using BlueSport_MVC.ModelsDTO;
+using BlueSport_MVC.Service.Client;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -10,16 +11,19 @@ namespace BlueSport_MVC.Service.Category
 {
     public class CategoryService : ICategoryService
     {
+        public string path;
+        private readonly IClientService _clientService;
+        public CategoryService(IClientService clientService)
+        {
+            _clientService = clientService;
+        }
         public List<BlueSport_MVC.Models.CategoryModel> GetCategories()
         {
             var data = new List<BlueSport_MVC.Models.CategoryModel>();
 
             #region Get Data DTO => API
-            var client = new RestClient("https://virtserver.swaggerhub.com/duccanh07/BlueSport-MWG/1.0.0/category");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.GET);
-            IRestResponse response = client.Execute(request);
-            Console.WriteLine(response.Content);
+            path = "category";
+            var response = _clientService.GetAPI(path);
             var dataDto = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ModelsDTO.CategoryDTO>>(response.Content);
             #endregion
 

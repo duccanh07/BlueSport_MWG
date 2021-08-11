@@ -1,4 +1,4 @@
-﻿@model BlueSport_MVC.ViewModel.ViewModelHome
+﻿@model BlueSport_MVC.ViewModel.vmCommon
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,13 +8,14 @@
     <link href="./images/favicon.ico" rel="shortcut icon" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" type="text/css" href="~/css/owl.carousel.css">
     <link rel="stylesheet" type="text/css" href="~/css/global.css">
     <link rel="stylesheet" type="text/css" href="~/css/listing.css">
     <link rel="stylesheet" type="text/css" href="~/css/home.css">
+
 </head>
 <body>
+    <div class="bgcover"></div>
     <!-- Header-->
     @Html.Partial("~/Views/Shared/Common/_PartialHeader.cshtml", Model.lsCategory)
     <!-- End Header-->
@@ -28,46 +29,5 @@
     @Html.Partial("~/Views/Shared/Common/_PartialFooter.cshtml")
 
     <!-- End Footer -->
-
-
-
-
-    <script src="~/js/jquery.min.js"></script>
-    <script src="~/js/owl.carousel.min.js"></script>
-    <script src="~/js/common.js"></script>
-    <script>
-        $(document).ready(function () {
-            $(".trademark__list").owlCarousel({
-                items: 1,
-                dots: true,
-                nav: false,
-            });
-            $(".trademark__post").owlCarousel({
-                items: 1,
-                dots: true,
-                nav: false,
-            });
-            $('.visit-checkbox').click(function () {
-                $('.visit-checkbox span').toggleClass('act');
-            });
-            $(".slider-banner").owlCarousel({
-                loop: true,
-                items: 1,
-                dots: true,
-                nav: false,
-                autoplay: true,
-                autoplayTimeout: 3000,
-                autoplayHoverPause: true
-            });
-
-            $('.visit-btn').click(function () {
-                $('.visit__list').toggleClass('open');
-                $(this).toggleClass('act');
-                document.querySelector('.visit-btn span').innerHTML = "XEM THÊM 9 SIÊU THỊ";
-                document.querySelector('.visit-btn.act span').innerHTML = "THU GỌN";
-
-            });
-        });
-    </script>
 </body>
 </html>

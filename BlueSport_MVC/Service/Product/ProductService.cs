@@ -1,5 +1,6 @@
 ﻿using BlueSport_MVC.Models;
 using BlueSport_MVC.ModelsDTO;
+using BlueSport_MVC.Service.Client;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,13 @@ namespace BlueSport_MVC.Service.Product
 {
     public class ProductService : IProductService
     {
+        public string path;
+        private readonly IClientService _clientService;
+
+        public ProductService (IClientService clientService)
+        {
+            _clientService = clientService;
+        }
         public List<BlueSport_MVC.Models.ProductModel> GetProductsAll()
         {
             // to do call api 
@@ -18,12 +26,10 @@ namespace BlueSport_MVC.Service.Product
 
 
             #region Get Data DTO => API
-            var client = new RestClient("https://virtserver.swaggerhub.com/duccanh07/BlueSport-MWG/1.0.0/product");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.GET);
-            IRestResponse response = client.Execute(request);
-            Console.WriteLine(response.Content);
+            path = "product";
+            var response = _clientService.GetAPI(path);
             var dataDto = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ModelsDTO.ProductDTO>>(response.Content);
+            
             #endregion
 
             #region Mapping Data DTO => Model 
@@ -47,11 +53,8 @@ namespace BlueSport_MVC.Service.Product
 
 
             #region Get Data DTO => API
-            var client = new RestClient("https://virtserver.swaggerhub.com/duccanh07/BlueSport-MWG/1.0.0/product");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.GET);
-            IRestResponse response = client.Execute(request);
-            Console.WriteLine(response.Content);
+            path = "product";
+            var response = _clientService.GetAPI(path);
             var dataDto = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ModelsDTO.ProductDTO>>(response.Content);
             #endregion
 
@@ -231,172 +234,211 @@ namespace BlueSport_MVC.Service.Product
         }
         public List<BlueSport_MVC.Models.ProductModel> GetProductsFemale()
         {
-            var data = new List<Models.ProductModel>();
-            data.Add(new Models.ProductModel()
+            var data = new List<BlueSport_MVC.Models.ProductModel>();
+
+            #region Get Data DTO => API
+            path = "product";
+            var response = _clientService.GetAPI(path);
+            var dataDto = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ModelsDTO.ProductDTO>>(response.Content);
+            #endregion
+
+            #region Mapping Data DTO => Model 
+            List<ProductModel> productModels = new List<ProductModel>();
+            foreach (var item in dataDto)
             {
-                NameProduct = "Adizero Takumi Sen 7 Tokyo",
-                NameBrand = "ADIDAS",
-                ImageUrl = "./images/img01.png",
-                ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
-                PriceCurrent = "6.964.000",
-                PriceOld = "8.205.000",
-                Percent = "20",
-                Installment = "0",
+                productModels.Add(item.ToGetProduct());
+            }
+            #endregion
 
-            });
-            data.Add(new Models.ProductModel()
-            {
-                NameProduct = "Adizero Takumi Sen 7 Tokyo",
-                NameBrand = "ADIDAS",
-                ImageUrl = "./images/img02.png",
-                ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
-                PriceCurrent = "6.964.000",
-                PriceOld = "8.205.000",
-                Percent = "20",
-                Installment = "0",
+            #region Data
+            return productModels;
+            #endregion
+            /*  var data = new List<Models.ProductModel>();
+              data.Add(new Models.ProductModel()
+              {
+                  NameProduct = "Adizero Takumi Sen 7 Tokyo",
+                  NameBrand = "ADIDAS",
+                  ImageUrl = "./images/img01.png",
+                  ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
+                  PriceCurrent = "6.964.000",
+                  PriceOld = "8.205.000",
+                  Percent = "20",
+                  Installment = "0",
 
-            });
-            data.Add(new Models.ProductModel()
-            {
-                NameProduct = "Adizero Takumi Sen 7 Tokyo",
-                NameBrand = "ADIDAS",
-                ImageUrl = "./images/img02.png",
-                ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
-                PriceCurrent = "6.964.000",
-                PriceOld = "8.205.000",
-                Percent = "20",
-                Installment = "0",
-                ListImage = new List<ListImageModel>()
-                        {
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color02.png",
-                                ImageName = "test",
-                                ActiveImage = true
+              });
+              data.Add(new Models.ProductModel()
+              {
+                  NameProduct = "Adizero Takumi Sen 7 Tokyo",
+                  NameBrand = "ADIDAS",
+                  ImageUrl = "./images/img02.png",
+                  ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
+                  PriceCurrent = "6.964.000",
+                  PriceOld = "8.205.000",
+                  Percent = "20",
+                  Installment = "0",
 
-                            },
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color02.png",
-                                ImageName = "test",
-                                ActiveImage = false
-                            },
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color03.png",
-                                ImageName = "test",
-                                ActiveImage = false
-                            }
-                        }
+              });
+              data.Add(new Models.ProductModel()
+              {
+                  NameProduct = "Adizero Takumi Sen 7 Tokyo",
+                  NameBrand = "ADIDAS",
+                  ImageUrl = "./images/img02.png",
+                  ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
+                  PriceCurrent = "6.964.000",
+                  PriceOld = "8.205.000",
+                  Percent = "20",
+                  Installment = "0",
+                  ListImage = new List<ListImageModel>()
+                          {
+                              new ListImageModel
+                              {
+                                  ImageUrl = "./images/img-color02.png",
+                                  ImageName = "test",
+                                  ActiveImage = true
 
-            });
-            data.Add(new Models.ProductModel()
-            {
-                NameProduct = "Adizero Takumi Sen 7 Tokyo",
-                NameBrand = "ADIDAS",
-                ImageUrl = "./images/img01.png",
-                ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
-                PriceCurrent = "6.964.000",
-                PriceOld = "8.205.000",
-                Percent = "20",
-                Installment = "0",
-                ListImage = new List<ListImageModel>()
-                        {
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color02.png",
-                                ImageName = "test",
-                                ActiveImage = true
+                              },
+                              new ListImageModel
+                              {
+                                  ImageUrl = "./images/img-color02.png",
+                                  ImageName = "test",
+                                  ActiveImage = false
+                              },
+                              new ListImageModel
+                              {
+                                  ImageUrl = "./images/img-color03.png",
+                                  ImageName = "test",
+                                  ActiveImage = false
+                              }
+                          }
 
-                            },
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color02.png",
-                                ImageName = "test",
-                                ActiveImage = false
-                            },
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color03.png",
-                                ImageName = "test",
-                                ActiveImage = false
-                            }
-                        }
-            });
+              });
+              data.Add(new Models.ProductModel()
+              {
+                  NameProduct = "Adizero Takumi Sen 7 Tokyo",
+                  NameBrand = "ADIDAS",
+                  ImageUrl = "./images/img01.png",
+                  ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
+                  PriceCurrent = "6.964.000",
+                  PriceOld = "8.205.000",
+                  Percent = "20",
+                  Installment = "0",
+                  ListImage = new List<ListImageModel>()
+                          {
+                              new ListImageModel
+                              {
+                                  ImageUrl = "./images/img-color02.png",
+                                  ImageName = "test",
+                                  ActiveImage = true
 
-            data.Add(new Models.ProductModel()
-            {
-                NameProduct = "Adizero Takumi Sen 7 Tokyo",
-                NameBrand = "ADIDAS",
-                ImageUrl = "./images/img02.png",
-                ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
-                PriceCurrent = "6.964.000",
-                PriceOld = "8.205.000",
-                Percent = "20",
-                Installment = "0",
-                ListImage = new List<ListImageModel>()
-                        {
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color02.png",
-                                ImageName = "test",
-                                ActiveImage = true
+                              },
+                              new ListImageModel
+                              {
+                                  ImageUrl = "./images/img-color02.png",
+                                  ImageName = "test",
+                                  ActiveImage = false
+                              },
+                              new ListImageModel
+                              {
+                                  ImageUrl = "./images/img-color03.png",
+                                  ImageName = "test",
+                                  ActiveImage = false
+                              }
+                          }
+              });
 
-                            },
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color02.png",
-                                ImageName = "test",
-                                ActiveImage = false
-                            },
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color03.png",
-                                ImageName = "test",
-                                ActiveImage = false
-                            }
-                        }
+              data.Add(new Models.ProductModel()
+              {
+                  NameProduct = "Adizero Takumi Sen 7 Tokyo",
+                  NameBrand = "ADIDAS",
+                  ImageUrl = "./images/img02.png",
+                  ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
+                  PriceCurrent = "6.964.000",
+                  PriceOld = "8.205.000",
+                  Percent = "20",
+                  Installment = "0",
+                  ListImage = new List<ListImageModel>()
+                          {
+                              new ListImageModel
+                              {
+                                  ImageUrl = "./images/img-color02.png",
+                                  ImageName = "test",
+                                  ActiveImage = true
 
-            });
-            data.Add(new Models.ProductModel()
-            {
-                NameProduct = "Adizero Takumi Sen 7 Tokyo",
-                NameBrand = "ADIDAS",
-                ImageUrl = "./images/img01.png",
-                ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
-                PriceCurrent = "6.964.000",
-                PriceOld = "8.205.000",
-                Percent = "20",
-                Installment = "0",
-                ListImage = new List<ListImageModel>()
-                        {
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color02.png",
-                                ImageName = "test",
-                                ActiveImage = true
+                              },
+                              new ListImageModel
+                              {
+                                  ImageUrl = "./images/img-color02.png",
+                                  ImageName = "test",
+                                  ActiveImage = false
+                              },
+                              new ListImageModel
+                              {
+                                  ImageUrl = "./images/img-color03.png",
+                                  ImageName = "test",
+                                  ActiveImage = false
+                              }
+                          }
 
-                            },
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color02.png",
-                                ImageName = "test",
-                                ActiveImage = false
-                            },
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color03.png",
-                                ImageName = "test",
-                                ActiveImage = false
-                            }
-                        }
-            });
+              });
+              data.Add(new Models.ProductModel()
+              {
+                  NameProduct = "Adizero Takumi Sen 7 Tokyo",
+                  NameBrand = "ADIDAS",
+                  ImageUrl = "./images/img01.png",
+                  ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
+                  PriceCurrent = "6.964.000",
+                  PriceOld = "8.205.000",
+                  Percent = "20",
+                  Installment = "0",
+                  ListImage = new List<ListImageModel>()
+                          {
+                              new ListImageModel
+                              {
+                                  ImageUrl = "./images/img-color02.png",
+                                  ImageName = "test",
+                                  ActiveImage = true
 
-            return data;
+                              },
+                              new ListImageModel
+                              {
+                                  ImageUrl = "./images/img-color02.png",
+                                  ImageName = "test",
+                                  ActiveImage = false
+                              },
+                              new ListImageModel
+                              {
+                                  ImageUrl = "./images/img-color03.png",
+                                  ImageName = "test",
+                                  ActiveImage = false
+                              }
+                          }
+              });
+
+              return data;*/
         }
         public List<BlueSport_MVC .Models.ProductModel> GetProductsChildren()
         {
-            var data = new List<Models.ProductModel>();
+            var data = new List<BlueSport_MVC.Models.ProductModel>();
+
+
+            #region Get Data DTO => API
+            path = "product";
+            var response = _clientService.GetAPI(path);
+            var dataDto = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ModelsDTO.ProductDTO>>(response.Content);
+            #endregion
+
+            #region Mapping Data DTO => Model 
+            List<ProductModel> productModels = new List<ProductModel>();
+            foreach (var item in dataDto)
+            {
+                productModels.Add(item.ToGetProduct());
+            }
+            #endregion
+
+            #region Data
+            return productModels;
+            #endregion
+            /*var data = new List<Models.ProductModel>();
             data.Add(new Models.ProductModel()
             {
                 NameProduct = "Adizero Takumi Sen 7 Tokyo",
@@ -557,176 +599,216 @@ namespace BlueSport_MVC.Service.Product
                         }
             });
 
-            return data;
+            return data;*/
         }
         public List<BlueSport_MVC.Models.ProductModel> GetProductsBicycle()
         {
-            var data = new List<Models.ProductModel>();
-            data.Add(new Models.ProductModel()
+            var data = new List<BlueSport_MVC.Models.ProductModel>();
+
+
+            #region Get Data DTO => API
+            path = "product";
+            var response = _clientService.GetAPI(path);
+            var dataDto = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ModelsDTO.ProductDTO>>(response.Content);
+            #endregion
+
+            #region Mapping Data DTO => Model 
+            List<ProductModel> productModels = new List<ProductModel>();
+            foreach (var item in dataDto)
             {
-                NameProduct = "Adizero Takumi Sen 7 Tokyo",
-                NameBrand = "ADIDAS",
-                ImageUrl = "./images/img01.png",
-                ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
-                PriceCurrent = "6.964.000",
-                PriceOld = "8.205.000",
-                Percent = "20",
-                Installment = "0",
+                productModels.Add(item.ToGetProduct());
+            }
+            #endregion
 
-            });
-            data.Add(new Models.ProductModel()
-            {
-                NameProduct = "Adizero Takumi Sen 7 Tokyo",
-                NameBrand = "ADIDAS",
-                ImageUrl = "./images/img02.png",
-                ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
-                PriceCurrent = "6.964.000",
-                PriceOld = "8.205.000",
-                Percent = "20",
-                Installment = "0",
+            #region Data
+            return productModels;
+            #endregion
+            /* var data = new List<Models.ProductModel>();
+             data.Add(new Models.ProductModel()
+             {
+                 NameProduct = "Adizero Takumi Sen 7 Tokyo",
+                 NameBrand = "ADIDAS",
+                 ImageUrl = "./images/img01.png",
+                 ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
+                 PriceCurrent = "6.964.000",
+                 PriceOld = "8.205.000",
+                 Percent = "20",
+                 Installment = "0",
 
-            });
-            data.Add(new Models.ProductModel()
-            {
-                NameProduct = "Adizero Takumi Sen 7 Tokyo",
-                NameBrand = "ADIDAS",
-                ImageUrl = "./images/img02.png",
-                ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
-                PriceCurrent = "6.964.000",
-                PriceOld = "8.205.000",
-                Percent = "20",
-                Installment = "0",
-                ListImage = new List<ListImageModel>()
-                        {
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color02.png",
-                                ImageName = "test",
-                                ActiveImage = true
+             });
+             data.Add(new Models.ProductModel()
+             {
+                 NameProduct = "Adizero Takumi Sen 7 Tokyo",
+                 NameBrand = "ADIDAS",
+                 ImageUrl = "./images/img02.png",
+                 ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
+                 PriceCurrent = "6.964.000",
+                 PriceOld = "8.205.000",
+                 Percent = "20",
+                 Installment = "0",
 
-                            },
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color02.png",
-                                ImageName = "test",
-                                ActiveImage = false
-                            },
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color03.png",
-                                ImageName = "test",
-                                ActiveImage = false
-                            }
-                        }
+             });
+             data.Add(new Models.ProductModel()
+             {
+                 NameProduct = "Adizero Takumi Sen 7 Tokyo",
+                 NameBrand = "ADIDAS",
+                 ImageUrl = "./images/img02.png",
+                 ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
+                 PriceCurrent = "6.964.000",
+                 PriceOld = "8.205.000",
+                 Percent = "20",
+                 Installment = "0",
+                 ListImage = new List<ListImageModel>()
+                         {
+                             new ListImageModel
+                             {
+                                 ImageUrl = "./images/img-color02.png",
+                                 ImageName = "test",
+                                 ActiveImage = true
 
-            });
-            data.Add(new Models.ProductModel()
-            {
-                NameProduct = "Adizero Takumi Sen 7 Tokyo",
-                NameBrand = "ADIDAS",
-                ImageUrl = "./images/img01.png",
-                ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
-                PriceCurrent = "6.964.000",
-                PriceOld = "8.205.000",
-                Percent = "20",
-                Installment = "0",
-                ListImage = new List<ListImageModel>()
-                        {
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color02.png",
-                                ImageName = "test",
-                                ActiveImage = true
+                             },
+                             new ListImageModel
+                             {
+                                 ImageUrl = "./images/img-color02.png",
+                                 ImageName = "test",
+                                 ActiveImage = false
+                             },
+                             new ListImageModel
+                             {
+                                 ImageUrl = "./images/img-color03.png",
+                                 ImageName = "test",
+                                 ActiveImage = false
+                             }
+                         }
 
-                            },
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color02.png",
-                                ImageName = "test",
-                                ActiveImage = false
-                            },
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color03.png",
-                                ImageName = "test",
-                                ActiveImage = false
-                            }
-                        }
-            });
+             });
+             data.Add(new Models.ProductModel()
+             {
+                 NameProduct = "Adizero Takumi Sen 7 Tokyo",
+                 NameBrand = "ADIDAS",
+                 ImageUrl = "./images/img01.png",
+                 ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
+                 PriceCurrent = "6.964.000",
+                 PriceOld = "8.205.000",
+                 Percent = "20",
+                 Installment = "0",
+                 ListImage = new List<ListImageModel>()
+                         {
+                             new ListImageModel
+                             {
+                                 ImageUrl = "./images/img-color02.png",
+                                 ImageName = "test",
+                                 ActiveImage = true
 
-            data.Add(new Models.ProductModel()
-            {
-                NameProduct = "Adizero Takumi Sen 7 Tokyo",
-                NameBrand = "ADIDAS",
-                ImageUrl = "./images/img02.png",
-                ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
-                PriceCurrent = "6.964.000",
-                PriceOld = "8.205.000",
-                Percent = "20",
-                Installment = "0",
-                ListImage = new List<ListImageModel>()
-                        {
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color02.png",
-                                ImageName = "test",
-                                ActiveImage = true
+                             },
+                             new ListImageModel
+                             {
+                                 ImageUrl = "./images/img-color02.png",
+                                 ImageName = "test",
+                                 ActiveImage = false
+                             },
+                             new ListImageModel
+                             {
+                                 ImageUrl = "./images/img-color03.png",
+                                 ImageName = "test",
+                                 ActiveImage = false
+                             }
+                         }
+             });
 
-                            },
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color02.png",
-                                ImageName = "test",
-                                ActiveImage = false
-                            },
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color03.png",
-                                ImageName = "test",
-                                ActiveImage = false
-                            }
-                        }
+             data.Add(new Models.ProductModel()
+             {
+                 NameProduct = "Adizero Takumi Sen 7 Tokyo",
+                 NameBrand = "ADIDAS",
+                 ImageUrl = "./images/img02.png",
+                 ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
+                 PriceCurrent = "6.964.000",
+                 PriceOld = "8.205.000",
+                 Percent = "20",
+                 Installment = "0",
+                 ListImage = new List<ListImageModel>()
+                         {
+                             new ListImageModel
+                             {
+                                 ImageUrl = "./images/img-color02.png",
+                                 ImageName = "test",
+                                 ActiveImage = true
 
-            });
-            data.Add(new Models.ProductModel()
-            {
-                NameProduct = "Adizero Takumi Sen 7 Tokyo",
-                NameBrand = "ADIDAS",
-                ImageUrl = "./images/img01.png",
-                ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
-                PriceCurrent = "6.964.000",
-                PriceOld = "8.205.000",
-                Percent = "20",
-                Installment = "0",
-                ListImage = new List<ListImageModel>()
-                        {
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color02.png",
-                                ImageName = "test",
-                                ActiveImage = true
+                             },
+                             new ListImageModel
+                             {
+                                 ImageUrl = "./images/img-color02.png",
+                                 ImageName = "test",
+                                 ActiveImage = false
+                             },
+                             new ListImageModel
+                             {
+                                 ImageUrl = "./images/img-color03.png",
+                                 ImageName = "test",
+                                 ActiveImage = false
+                             }
+                         }
 
-                            },
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color02.png",
-                                ImageName = "test",
-                                ActiveImage = false
-                            },
-                            new ListImageModel
-                            {
-                                ImageUrl = "./images/img-color03.png",
-                                ImageName = "test",
-                                ActiveImage = false
-                            }
-                        }
-            });
+             });
+             data.Add(new Models.ProductModel()
+             {
+                 NameProduct = "Adizero Takumi Sen 7 Tokyo",
+                 NameBrand = "ADIDAS",
+                 ImageUrl = "./images/img01.png",
+                 ImageName = "ADIDAS Adizero Takumi Sen 7 Tokyo",
+                 PriceCurrent = "6.964.000",
+                 PriceOld = "8.205.000",
+                 Percent = "20",
+                 Installment = "0",
+                 ListImage = new List<ListImageModel>()
+                         {
+                             new ListImageModel
+                             {
+                                 ImageUrl = "./images/img-color02.png",
+                                 ImageName = "test",
+                                 ActiveImage = true
 
-            return data;
+                             },
+                             new ListImageModel
+                             {
+                                 ImageUrl = "./images/img-color02.png",
+                                 ImageName = "test",
+                                 ActiveImage = false
+                             },
+                             new ListImageModel
+                             {
+                                 ImageUrl = "./images/img-color03.png",
+                                 ImageName = "test",
+                                 ActiveImage = false
+                             }
+                         }
+             });
+
+             return data;*/
         }
         public List<BlueSport_MVC.Models.ProductModel> GetProductsSport()
         {
-            var data = new List<Models.ProductModel>();
+            var data = new List<BlueSport_MVC.Models.ProductModel>();
+
+
+            #region Get Data DTO => API
+            path = "product";
+            var response = _clientService.GetAPI(path);
+            var dataDto = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ModelsDTO.ProductDTO>>(response.Content);
+            #endregion
+
+            #region Mapping Data DTO => Model 
+            List<ProductModel> productModels = new List<ProductModel>();
+            foreach (var item in dataDto)
+            {
+                productModels.Add(item.ToGetProduct());
+            }
+            #endregion
+
+            #region Data
+            return productModels;
+            #endregion
+            /*var data = new List<Models.ProductModel>();
             data.Add(new Models.ProductModel()
             {
                 NameProduct = "Adizero Takumi Sen 7 Tokyo",
@@ -887,7 +969,28 @@ namespace BlueSport_MVC.Service.Product
                         }
             });
 
-            return data;
+            return data;*/
+        }
+        public ProductModel GetUrl(string urlProduct)
+        {
+            // to do call api 
+
+            var data = new List<BlueSport_MVC.Models.ProductModel>();
+
+
+            #region Get Data DTO => API
+
+            var client = new RestClient("https://virtserver.swaggerhub.com/duccanh07/BlueSport-MWG/1.0.0/product");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.GET + urlProduct);
+            IRestResponse response = client.Execute(request);
+            Console.WriteLine(response.Content);
+            var dataDto = Newtonsoft.Json.JsonConvert.DeserializeObject<ProductDTO>(response.Content);
+
+            #endregion
+            #region Data
+            return dataDto.ToGetProduct();
+            #endregion
         }
     }
 }
